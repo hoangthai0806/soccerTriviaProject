@@ -1,4 +1,4 @@
-class Player {
+class Player { //Ben
   static nextId = 1;
   constructor(name) {
     this.id = Player.nextId++;
