@@ -1,0 +1,24 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f7eaea;
+  text-align: center;
+}
+
+#game {
+  margin-top: 50px;
+}
+
+.hidden {
+  display: none;
+}
+
+
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  background-color: #af4c8b;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
