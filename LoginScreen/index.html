@@ -4,9 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Soccer Trivia Game</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" type="text/css" href="/LoginScreen/style.css">
 </head>
 <body>
+  <div class="welcome"> 
+    <h1> Welcome to Soccer Trivia! </h1>
+  </div>
+
   <div class="container">
     <form action ="">
       <h1> Log in </h1>
@@ -18,13 +22,14 @@
         <label for=""> Password</label>
         <input type="password" class="form-control" required>
       </div>
+      <p id="error-message" class="error-text"></p>
       <input type="submit" class="btn" value="Login">
       <p class="register-text">
-        First time signing in? 
-        <a href="../RegisterScreen/Register.html">Register here</a>
-      </p>
+  First time signing in?
+  <a href="/register">Register here</a>
+</p>
     </form>
   </div>
-  <script src="script.js"></script>
+  <script src="/LoginScreen/script.js"></script>
 </body>
 </html>
