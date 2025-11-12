@@ -49,8 +49,8 @@ app.post('/register', (req, res) => {
   const sql = `INSERT INTO players (player_name, player_email, player_password, join_date) VALUES (?, ?, ?, NOW())`;
   db.query(sql, [player_name, player_email, player_password], (err, result) => {
     if (err) {
-      console.error('Error registering player:', err);
-      return res.status(500).send('Error registering player.');
+      console.error('Email ID already been used!', err);
+      return res.status(500).send('Email ID already been used!.');
     }
     console.log('Player registered:', result);
     res.status(200).send('Registration successful!');

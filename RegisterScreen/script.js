@@ -11,6 +11,7 @@ document.querySelector("form").addEventListener("submit", async (e) => {
   messageBox.style.marginTop = "10px";
   document.querySelector("form").appendChild(messageBox);
 
+
   if (!name || !email || !password || !confirmPassword) {
     messageBox.textContent = " Please fill in all fields.";
     messageBox.style.color = "red";

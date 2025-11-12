@@ -5,6 +5,7 @@ document.querySelector("form").addEventListener("submit", async (e) => {
   const password = document.querySelectorAll(".form-control")[1].value.trim();
   const errorBox = document.getElementById("error-message");
 
+
   if (!email || !password) {
     errorBox.textContent = "Please enter both email and password.";
     errorBox.style.color = "red";
