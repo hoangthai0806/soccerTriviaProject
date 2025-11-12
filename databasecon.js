@@ -1,14 +1,16 @@
-var mysql = require('mysql');
+const mysql = require('mysql2');
     
-    var con = mysql.createConnection({
-      host: "localhost",
-      port: "3306",
-      user: "root",
-      password: "rootdb",
-      insecureAuth : true
-    });
-    
-    con.connect(function(err) {
-      if (err) throw err;
-      console.log("Connected!");
-    });
+const db = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'rootdb',
+  database: 'soccer_trivia'
+});
+
+db.connect(err => {
+  if (err) {
+    console.error(' Database connection failed:', err);
+  } else {
+    console.log(' Connected to MySQL database.');
+  }
+});

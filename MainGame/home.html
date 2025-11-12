@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soccer Trivia Game</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="game-container">
+    <div class="right-panel">
+      <div class="leaderboard-box">
+        <h2>Leaderboard</h2>
+        <ul id="leaderboard">
+          <li><span>Player 1</span><span>DEMO</span></li>
+          <li><span>Player 2</span><span>DEMO</span></li>
+          <li><span>Player 3</span><span>DEMO</span></li>
+        </ul>
+      </div>
+      <div class="score-box">
+        <h2>Your Score</h2>
+        <p id="score">DEMO</p>
+        <p id="streak">Streak: DEMO</p>
+      </div>
+    </div>
+    <div class="main-area">
+      <div class="timer-box" id="timer">30s</div>
+      <div class="question-box" id="question-box">
+        <h2>Loading question...</h2>
+      </div>
+      <div class="answer-buttons" id="answer-buttons">
+        <button disabled>Answer 1</button>
+        <button disabled>Answer 2</button>
+        <button disabled>Answer 3</button>
+        <button disabled>Answer 4</button>
+      </div>
+    </div>
+  </div>
+  <div id="question-container"></div>
+
+<script type="module">
+  import QuestionManager from '/game/QuestionManager.js';
+  const qManager = new QuestionManager(document.getElementById('question-container'));
+  qManager.loadQuestion();
+</script>
+</body>
+</html>
