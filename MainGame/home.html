@@ -17,31 +17,32 @@
           <li><span>Player 3</span><span>DEMO</span></li>
         </ul>
       </div>
+
       <div class="score-box">
         <h2>Your Score</h2>
-        <p id="score">DEMO</p>
-        <p id="streak">Streak: DEMO</p>
+        <p id="score">0</p>
+        <p id="streak">Streak: 0</p>
       </div>
     </div>
+
     <div class="main-area">
-      <div class="timer-box" id="timer">30s</div>
-      <div class="question-box" id="question-box">
-        <h2>Loading question...</h2>
-      </div>
-      <div class="answer-buttons" id="answer-buttons">
-        <button disabled>Answer 1</button>
-        <button disabled>Answer 2</button>
-        <button disabled>Answer 3</button>
-        <button disabled>Answer 4</button>
+      <div class="timer-box" id="timer">TIMER</div>
+
+      <div id="question-container" class="quiz-box">
+        <h2 id="question">Loading question...</h2>
+        <div class="answers" id="answers"></div>
       </div>
     </div>
   </div>
-  <div id="question-container"></div>
 
 <script type="module">
-  import QuestionManager from '/game/QuestionManager.js';
-  const qManager = new QuestionManager(document.getElementById('question-container'));
+  import QuestionManager from '/MainGame/script.js';
+  const qManager = new QuestionManager(
+    document.getElementById('question'),
+    document.getElementById('answers')
+  );
   qManager.loadQuestion();
 </script>
+
 </body>
 </html>

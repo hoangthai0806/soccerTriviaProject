@@ -5,12 +5,10 @@ document.querySelector("form").addEventListener("submit", async (e) => {
   const email = document.querySelectorAll(".form-control")[1].value.trim();
   const password = document.querySelectorAll(".form-control")[2].value.trim();
   const confirmPassword = document.querySelectorAll(".form-control")[3].value.trim();
-
   const messageBox = document.createElement("p");
   messageBox.style.textAlign = "center";
   messageBox.style.marginTop = "10px";
   document.querySelector("form").appendChild(messageBox);
-
 
   if (!name || !email || !password || !confirmPassword) {
     messageBox.textContent = " Please fill in all fields.";

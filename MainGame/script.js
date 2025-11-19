@@ -1,62 +1,76 @@
-class Score {
-  constructor() {
-    this.currentScore = 0;
-    this.streak = 0;
-  }
-  win() {
-    this.streak++;
-    const pointsEarned = 10 * this.streak;
-    this.currentScore += pointsEarned;
-    console.log(`Win! +${pointsEarned} points (Streak: ${this.streak})`);
-    return pointsEarned;
-  }
-  lose() {
-    console.log(`Lose! Streak reset.`);
-    this.streak = 0;
-  }
-  reset() {
-    this.currentScore = 0;
-    this.streak = 0;
-  }
-  getScore() {
-    return this.currentScore;
-  }
-  getStreak() {
-    return this.streak;
-  }
-}
-
-
+import Score from "./score.js";
 
 class QuestionManager {
   constructor(questionContainer) {
     this.questionContainer = questionContainer;
+    this.Score = new Score();
+    this.shownQuestions = [];
+  }
+
+  updateScoreUI() {
+    document.getElementById("score").textContent = this.Score.getScore();
+    document.getElementById("streak").textContent =
+      "Streak: " + this.Score.getStreak();
   }
 
   async loadQuestion() {
     try {
       const response = await fetch('/get-question');
       const question = await response.json();
-
       this.displayQuestion(question);
     } catch (error) {
-      console.error('Error loading question:', error);
-      this.questionContainer.innerHTML = '<p>Error loading question.</p>';
+      console.error("Error loading question:", error);
+      this.questionContainer.innerHTML = "<p>Error loading question.</p>";
     }
   }
 
   displayQuestion(question) {
-    this.questionContainer.innerHTML = `
-      <div class="question-box">
-        <h2>${question.question_text}</h2>
-        <ul class="options">
-          <li><button data-answer="a">${question.option_a}</button></li>
-          <li><button data-answer="b">${question.option_b}</button></li>
-          <li><button data-answer="c">${question.option_c}</button></li>
-          <li><button data-answer="d">${question.option_d}</button></li>
-        </ul>
+this.questionContainer.innerHTML = `
+  <div class="qa-card">
+      <h2 class="question-text">${question.question_text}</h2>
+
+      <div class="answer-buttons">
+          <button class="answer-btn" data-answer="A">${question.option_a}</button>
+          <button class="answer-btn" data-answer="B">${question.option_b}</button>
+          <button class="answer-btn" data-answer="C">${question.option_c}</button>
+          <button class="answer-btn" data-answer="D">${question.option_d}</button>
       </div>
-    `;
+  </div>
+`;
+
+
+    document.querySelectorAll(".answer-btn").forEach((btn) => {
+      btn.addEventListener("click", () =>
+        this.checkAnswer(btn.dataset.answer, question.correct_answer)
+      );
+    });
+  }
+
+  checkAnswer(selected, correct) {
+    const buttons = document.querySelectorAll(".answer-btn");
+
+    buttons.forEach((btn) => (btn.disabled = true));
+
+    buttons.forEach((btn) => {
+      if (btn.dataset.answer === correct) {
+        btn.style.backgroundColor = "green";
+        btn.style.color = "white";
+      }
+    });
+
+    if (selected !== correct) {
+      const wrongBtn = [...buttons].find(
+        (btn) => btn.dataset.answer === selected
+      );
+      wrongBtn.style.backgroundColor = "red";
+      wrongBtn.style.color = "white";
+      this.Score.lose();
+    } else {
+      this.Score.win();
+    }
+
+    this.updateScoreUI();
+    setTimeout(() => this.loadQuestion(), 1500);
   }
 }
 

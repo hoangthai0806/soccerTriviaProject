@@ -45,7 +45,6 @@ app.post('/register', (req, res) => {
     return res.status(400).send('All fields are required.');
   }
 
-  // Insert new player into the database
   const sql = `INSERT INTO players (player_name, player_email, player_password, join_date) VALUES (?, ?, ?, NOW())`;
   db.query(sql, [player_name, player_email, player_password], (err, result) => {
     if (err) {
