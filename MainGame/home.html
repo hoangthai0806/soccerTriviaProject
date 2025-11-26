@@ -26,22 +26,35 @@
     </div>
 
     <div class="main-area">
+      <div id="progressBox" class="progress-box">Question 1/5</div>
+
       <div class="timer-box" id="timer">TIMER</div>
 
-      <div id="question-container" class="quiz-box">
-        <h2 id="question">Loading question...</h2>
-        <div class="answers" id="answers"></div>
-      </div>
+      <div id="question-container" class="quiz-box"></div>
     </div>
   </div>
+
+<div id="congratsPopup" class="popup-container">
+  <div class="popup-box">
+    <h2>Congratulations!</h2>
+    <p id="finalScoreText">Your score is: 0</p>
+    <button id="restartBtn">Play Again</button>
+  </div>
+</div>
 
 <script type="module">
   import QuestionManager from '/MainGame/script.js';
   const qManager = new QuestionManager(
-    document.getElementById('question'),
-    document.getElementById('answers')
+    document.getElementById('question-container')
   );
-  qManager.loadQuestion();
+
+  qManager.loadQuestionSet();
+
+  document.getElementById("restartBtn").addEventListener("click", () => {
+    qManager.restartGame();
+  });
+</script>
+
 </script>
 
 </body>

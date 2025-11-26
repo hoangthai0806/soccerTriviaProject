@@ -85,19 +85,20 @@ app.post('/login', (req, res) => {
   });
 });
 
+//QUESTION ROUTE
 app.get('/get-question', (req, res) => {
-  const sql = 'SELECT * FROM questions ORDER BY RAND() LIMIT 1';
+  const sql = 'SELECT * FROM questions ORDER BY RAND() LIMIT 5';
   
   db.query(sql, (err, results) => {
     if (err) {
       console.error('Error fetching question:', err);
       return res.status(500).send('Error fetching question.');
     }
-    res.json(results[0]); 
+    res.json(results); 
   });
 });
-
 
 app.listen(port, () => {
   console.log(`🚀 Server running at http://localhost:${port}`);
 });
+

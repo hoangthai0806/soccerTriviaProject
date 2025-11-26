@@ -4,27 +4,31 @@ class QuestionManager {
   constructor(questionContainer) {
     this.questionContainer = questionContainer;
     this.Score = new Score();
-    this.shownQuestions = [];
+    this.questions = [];
+    this.currentIndex = 0;
+    this.timer = null;
   }
 
   updateScoreUI() {
     document.getElementById("score").textContent = this.Score.getScore();
-    document.getElementById("streak").textContent =
-      "Streak: " + this.Score.getStreak();
+    document.getElementById("streak").textContent = "Streak: " + this.Score.getStreak();
   }
 
-  async loadQuestion() {
+  async loadQuestionSet() {
     try {
       const response = await fetch('/get-question');
-      const question = await response.json();
-      this.displayQuestion(question);
-    } catch (error) {
-      console.error("Error loading question:", error);
-      this.questionContainer.innerHTML = "<p>Error loading question.</p>";
+      this.questions = await response.json();
+      this.currentIndex = 0;
+      this.displayQuestion(this.questions[this.currentIndex]);
+    } catch (err) {
+      console.error("Error loading questions:", err);
+      this.questionContainer.innerHTML = "<p>Error loading questions.</p>";
     }
   }
 
   displayQuestion(question) {
+document.getElementById("progressBox").innerText =
+  `Question ${this.currentIndex + 1}/${this.questions.length}`;
 this.questionContainer.innerHTML = `
   <div class="qa-card">
       <h2 class="question-text">${question.question_text}</h2>
@@ -38,17 +42,18 @@ this.questionContainer.innerHTML = `
   </div>
 `;
 
-
     document.querySelectorAll(".answer-btn").forEach((btn) => {
       btn.addEventListener("click", () =>
         this.checkAnswer(btn.dataset.answer, question.correct_answer)
       );
     });
+    this.startTimer(question.correct_answer);
+
   }
 
   checkAnswer(selected, correct) {
+    clearInterval(this.timer);
     const buttons = document.querySelectorAll(".answer-btn");
-
     buttons.forEach((btn) => (btn.disabled = true));
 
     buttons.forEach((btn) => {
@@ -70,8 +75,61 @@ this.questionContainer.innerHTML = `
     }
 
     this.updateScoreUI();
-    setTimeout(() => this.loadQuestion(), 1500);
+    setTimeout(() => this.nextQuestion(), 1500);
   }
+  nextQuestion() {
+    this.currentIndex++;
+
+    if (this.currentIndex >= this.questions.length) {
+      this.showCongratsPopup();
+      return;
+    }
+
+    this.displayQuestion(this.questions[this.currentIndex]);
+  }
+
+  showCongratsPopup() {
+  document.getElementById("finalScoreText").textContent =
+    "Your score is: " + this.Score.getScore();
+
+  document.getElementById("congratsPopup").style.display = "flex";
 }
+  restartGame() {
+    document.getElementById("progressBox").innerText = "Question 1/5";
+    document.getElementById("congratsPopup").style.display = "none";
+    this.Score.reset();
+    this.updateScoreUI();
+    this.loadQuestionSet();
+  }
+  startTimer(correctAnswer) {
+  this.timeLeft = 10;
+  document.getElementById("timer").textContent = this.timeLeft + "s";
+  this.timer = setInterval(() => {
+    this.timeLeft--;
+    document.getElementById("timer").textContent = this.timeLeft + "s";
+    if (this.timeLeft <= 0) {
+      clearInterval(this.timer);
+      this.forceTimesUp(correctAnswer);
+    }
+  }, 1000);
+}
+forceTimesUp(correct) {
+  const buttons = document.querySelectorAll(".answer-btn");
+  buttons.forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.answer === correct) {
+      btn.style.backgroundColor = "green";
+      btn.style.color = "white";
+    }
+  });
+  this.Score.lose();  
+  this.updateScoreUI();
+  setTimeout(() => this.nextQuestion(), 1500);
+}
+
+
+}
+
+
 
 export default QuestionManager;
