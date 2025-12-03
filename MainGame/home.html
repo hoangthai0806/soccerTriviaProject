@@ -36,7 +36,7 @@
 
 <div id="congratsPopup" class="popup-container">
   <div class="popup-box">
-    <h2>Congratulations!</h2>
+    <h2>Finished!</h2>
     <p id="finalScoreText">Your score is: 0</p>
     <button id="restartBtn">Play Again</button>
   </div>
@@ -47,9 +47,8 @@
   const qManager = new QuestionManager(
     document.getElementById('question-container')
   );
-
   qManager.loadQuestionSet();
-
+  qManager.loadLeaderboard();
   document.getElementById("restartBtn").addEventListener("click", () => {
     qManager.restartGame();
   });

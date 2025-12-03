@@ -25,7 +25,7 @@ document.querySelector("form").addEventListener("submit", async (e) => {
       errorBox.textContent = "Login successful! Redirecting...";
       errorBox.style.color = "green";
       setTimeout(() => {
-        window.location.href = "/MainGame/home.html"; // Change this to your main game page
+        window.location.href = "/MainGame/home.html"; 
       }, 1500);
     } else {
       errorBox.textContent = "Your Username or Password is incorrect.";

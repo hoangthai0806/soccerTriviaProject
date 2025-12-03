@@ -70,25 +70,26 @@ app.post('/login', (req, res) => {
       console.error('Database error during login:', err);
       return res.status(500).send('Database error.');
     }
-
     if (results.length === 0) {     
       return res.status(401).send('Please enter your username and password!.');
     }
-
     const user = results[0];
-
     if (user.player_password === player_password) {
-      res.status(200).send('Login successful!');
-    } else {
-      res.status(401).send('Your Username or password is incorrect.');
-    }
+  res.status(200).json({
+    message: "Login successful",
+    player_id: user.player_id,
+    player_name: user.player_name
+  });
+} else {
+  res.status(401).send('Your Username or password is incorrect.');
+}
+
   });
 });
 
 //QUESTION ROUTE
 app.get('/get-question', (req, res) => {
   const sql = 'SELECT * FROM questions ORDER BY RAND() LIMIT 5';
-  
   db.query(sql, (err, results) => {
     if (err) {
       console.error('Error fetching question:', err);
@@ -98,7 +99,42 @@ app.get('/get-question', (req, res) => {
   });
 });
 
+// SAVE SCORE
+app.post('/save-score', (req, res) => {
+  const { player_id, score } = req.body;
+
+  const sql = `
+    INSERT INTO leaderboard (player_id, score, date_played)
+    VALUES (?, ?, NOW())`;
+
+  db.query(sql, [player_id, score], (err, result) => {
+    if (err) {
+      console.error("Error saving score:", err);
+      return res.status(500).send("Error saving score");
+    }
+    res.status(200).send("Score saved!");
+  });
+});
+
+// GET LEADERBOARD
+app.get('/leaderboard', (req, res) => {
+  const sql = `
+    SELECT l.score, p.player_name, l.date_played
+    FROM leaderboard l
+    JOIN players p ON l.player_id = p.player_id
+    ORDER BY l.score DESC
+    LIMIT 5`;
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error loading leaderboard:", err);
+      return res.status(500).send("Error loading leaderboard");
+    }
+    res.json(results);
+  });
+});
+
 app.listen(port, () => {
-  console.log(`🚀 Server running at http://localhost:${port}`);
+  console.log(` Server running at http://localhost:${port}`);
 });
 

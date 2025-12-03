@@ -79,21 +79,46 @@ this.questionContainer.innerHTML = `
   }
   nextQuestion() {
     this.currentIndex++;
-
     if (this.currentIndex >= this.questions.length) {
       this.showCongratsPopup();
       return;
     }
-
     this.displayQuestion(this.questions[this.currentIndex]);
   }
 
-  showCongratsPopup() {
+  async showCongratsPopup() {
   document.getElementById("finalScoreText").textContent =
     "Your score is: " + this.Score.getScore();
-
+  await fetch('/save-score', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    player_id: localStorage.getItem("player_id"),
+    score: this.Score.getScore()
+  })
+});
+await this.loadLeaderboard();
   document.getElementById("congratsPopup").style.display = "flex";
 }
+
+async loadLeaderboard() {
+  try {
+    const response = await fetch('/leaderboard');
+    const rows = await response.json();
+    const list = document.getElementById("leaderboard");
+    list.innerHTML = "";
+    rows.forEach(row => {
+      const li = document.createElement("li");
+      li.innerHTML = `<span>${row.player_name}</span> <span>${row.score}</span>`;
+      list.appendChild(li);
+    });
+
+  } catch (err) {
+    console.error("Error loading leaderboard:", err);
+  }
+}
+
+
   restartGame() {
     document.getElementById("progressBox").innerText = "Question 1/5";
     document.getElementById("congratsPopup").style.display = "none";
@@ -102,7 +127,7 @@ this.questionContainer.innerHTML = `
     this.loadQuestionSet();
   }
   startTimer(correctAnswer) {
-  this.timeLeft = 10;
+  this.timeLeft = 30;
   document.getElementById("timer").textContent = this.timeLeft + "s";
   this.timer = setInterval(() => {
     this.timeLeft--;
@@ -125,11 +150,5 @@ forceTimesUp(correct) {
   this.Score.lose();  
   this.updateScoreUI();
   setTimeout(() => this.nextQuestion(), 1500);
-}
-
-
-}
-
-
-
+}}
 export default QuestionManager;
