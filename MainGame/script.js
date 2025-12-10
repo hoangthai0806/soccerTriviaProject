@@ -7,6 +7,7 @@ class QuestionManager {
     this.questions = [];
     this.currentIndex = 0;
     this.timer = null;
+    this.player_id = localStorage.getItem("player_id");
   }
 
   updateScoreUI() {
@@ -93,7 +94,7 @@ this.questionContainer.innerHTML = `
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    player_id: localStorage.getItem("player_id"),
+    player_id: this.player_id,
     score: this.Score.getScore()
   })
 });

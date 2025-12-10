@@ -5,7 +5,6 @@ document.querySelector("form").addEventListener("submit", async (e) => {
   const password = document.querySelectorAll(".form-control")[1].value.trim();
   const errorBox = document.getElementById("error-message");
 
-
   if (!email || !password) {
     errorBox.textContent = "Please enter both email and password.";
     errorBox.style.color = "red";
@@ -16,16 +15,23 @@ document.querySelector("form").addEventListener("submit", async (e) => {
     const response = await fetch("/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ player_email: email, player_password: password }),
+      body: JSON.stringify({
+        player_email: email,
+        player_password: password
+      }),
     });
 
-    const result = await response.text();
+    const data = await response.json();
 
     if (response.ok) {
+      localStorage.setItem("player_id", data.player_id);
+      localStorage.setItem("player_name", data.player_name);
+
       errorBox.textContent = "Login successful! Redirecting...";
       errorBox.style.color = "green";
+
       setTimeout(() => {
-        window.location.href = "/MainGame/home.html"; 
+        window.location.href = "/MainGame/home.html";
       }, 1500);
     } else {
       errorBox.textContent = "Your Username or Password is incorrect.";

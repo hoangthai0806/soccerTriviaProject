@@ -103,27 +103,35 @@ app.get('/get-question', (req, res) => {
 app.post('/save-score', (req, res) => {
   const { player_id, score } = req.body;
 
-  const sql = `
-    INSERT INTO leaderboard (player_id, score, date_played)
-    VALUES (?, ?, NOW())`;
+  if (!player_id || !score && score !== 0) {
+    return res.status(400).send("Missing player_id or score");
+  }
+
+  const sql = "INSERT INTO leaderboard (player_id, score) VALUES (?, ?)";
 
   db.query(sql, [player_id, score], (err, result) => {
     if (err) {
       console.error("Error saving score:", err);
-      return res.status(500).send("Error saving score");
+      return res.status(500).send("Database error while saving score.");
     }
-    res.status(200).send("Score saved!");
+    res.status(200).send("Score saved");
   });
 });
+
 
 // GET LEADERBOARD
 app.get('/leaderboard', (req, res) => {
   const sql = `
-    SELECT l.score, p.player_name, l.date_played
+    SELECT p.player_name, l.score
     FROM leaderboard l
     JOIN players p ON l.player_id = p.player_id
-    ORDER BY l.score DESC
-    LIMIT 5`;
+    INNER JOIN (
+      SELECT player_id, MAX(score) AS max_score
+      FROM leaderboard
+      GROUP BY player_id
+    ) AS max_scores
+    ON l.player_id = max_scores.player_id AND l.score = max_scores.max_score
+    ORDER BY l.score DESC`;
 
   db.query(sql, (err, results) => {
     if (err) {
@@ -137,4 +145,3 @@ app.get('/leaderboard', (req, res) => {
 app.listen(port, () => {
   console.log(` Server running at http://localhost:${port}`);
 });
-
