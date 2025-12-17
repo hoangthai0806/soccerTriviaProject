@@ -3,7 +3,6 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt'); 
-
 const app = express();
 const port = 3000;
 
@@ -24,7 +23,6 @@ db.connect(err => {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use('/LoginScreen', express.static(path.join(__dirname, 'LoginScreen')));
 app.use('/RegisterScreen', express.static(path.join(__dirname, 'RegisterScreen')));
 app.use('/MainGame', express.static(path.join(__dirname, 'MainGame')));
@@ -32,7 +30,6 @@ app.use('/MainGame', express.static(path.join(__dirname, 'MainGame')));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'LoginScreen', 'index.html'));
 });
-
 app.get('/register', (req, res) => {
   res.sendFile(path.join(__dirname, 'RegisterScreen', 'Register.html'));
 });
@@ -44,7 +41,6 @@ app.post('/register', (req, res) => {
   if (!player_name || !player_email || !player_password) {
     return res.status(400).send('All fields are required.');
   }
-
   const sql = `INSERT INTO players (player_name, player_email, player_password, join_date) VALUES (?, ?, ?, NOW())`;
   db.query(sql, [player_name, player_email, player_password], (err, result) => {
     if (err) {
@@ -59,11 +55,9 @@ app.post('/register', (req, res) => {
 // LOGIN ROUTE
 app.post('/login', (req, res) => {
   const { player_email, player_password } = req.body;
-
   if (!player_email || !player_password) {
     return res.status(400).send('Please enter both username and password.');
   }
-
   const sql = 'SELECT * FROM players WHERE player_email = ?';
   db.query(sql, [player_email], (err, results) => {
     if (err) {
@@ -131,7 +125,8 @@ app.get('/leaderboard', (req, res) => {
       GROUP BY player_id
     ) AS max_scores
     ON l.player_id = max_scores.player_id AND l.score = max_scores.max_score
-    ORDER BY l.score DESC`;
+    ORDER BY l.score DESC
+    LIMIT 5`;
 
   db.query(sql, (err, results) => {
     if (err) {
