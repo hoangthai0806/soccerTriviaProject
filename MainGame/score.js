@@ -10,7 +10,6 @@ class Score {
     return pointsEarned;
   }
   lose() {
-
     this.streak = 0;
   }
   reset() {

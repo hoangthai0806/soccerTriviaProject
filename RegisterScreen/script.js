@@ -3,6 +3,7 @@ document.querySelector("form").addEventListener("submit", async (e) => {
   setTimeout(() => {
   messageBox.textContent = "";
 }, 3000);
+
   const name = document.querySelector(".name").value.trim();
   const email = document.querySelectorAll(".form-control")[1].value.trim();
   const password = document.querySelectorAll(".form-control")[2].value.trim();

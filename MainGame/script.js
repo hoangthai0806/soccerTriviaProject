@@ -33,7 +33,6 @@ document.getElementById("progressBox").innerText =
 this.questionContainer.innerHTML = `
   <div class="qa-card">
       <h2 class="question-text">${question.question_text}</h2>
-
       <div class="answer-buttons">
           <button class="answer-btn" data-answer="A">${question.option_a}</button>
           <button class="answer-btn" data-answer="B">${question.option_b}</button>
@@ -42,21 +41,18 @@ this.questionContainer.innerHTML = `
       </div>
   </div>
 `;
-
     document.querySelectorAll(".answer-btn").forEach((btn) => {
       btn.addEventListener("click", () =>
         this.checkAnswer(btn.dataset.answer, question.correct_answer)
       );
     });
     this.startTimer(question.correct_answer);
-
   }
 
   checkAnswer(selected, correct) {
     clearInterval(this.timer);
     const buttons = document.querySelectorAll(".answer-btn");
     buttons.forEach((btn) => (btn.disabled = true));
-
     buttons.forEach((btn) => {
       if (btn.dataset.answer === correct) {
         btn.style.backgroundColor = "green";
@@ -74,10 +70,10 @@ this.questionContainer.innerHTML = `
     } else {
       this.Score.win();
     }
-
     this.updateScoreUI();
     setTimeout(() => this.nextQuestion(), 1500);
   }
+
   nextQuestion() {
     this.currentIndex++;
     if (this.currentIndex >= this.questions.length) {
@@ -98,6 +94,7 @@ this.questionContainer.innerHTML = `
     score: this.Score.getScore()
   })
 });
+
 await this.loadLeaderboard();
   document.getElementById("congratsPopup").style.display = "flex";
 }
@@ -113,12 +110,10 @@ async loadLeaderboard() {
       li.innerHTML = `<span>${row.player_name}</span> <span>${row.score}</span>`;
       list.appendChild(li);
     });
-
   } catch (err) {
     console.error("Error loading leaderboard:", err);
   }
 }
-
 
   restartGame() {
     document.getElementById("progressBox").innerText = "Question 1/5";
