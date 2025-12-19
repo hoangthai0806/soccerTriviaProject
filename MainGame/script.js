@@ -123,7 +123,7 @@ async loadLeaderboard() {
     this.loadQuestionSet();
   }
   startTimer(correctAnswer) {
-  this.timeLeft = 30;
+  this.timeLeft = 15;
   document.getElementById("timer").textContent = this.timeLeft + "s";
   this.timer = setInterval(() => {
     this.timeLeft--;
